@@ -6,7 +6,7 @@ ENV LANG C.UTF-8
 
 # Default versions
 ENV INFLUXDB_VERSION 1.2.0
-ENV GRAFANA_VERSION  4.1.1-1484211277
+ENV GRAFANA_VERSION  4.6.4
 
 # Database Defaults
 ENV INFLUXDB_GRAFANA_DB datasource
@@ -43,6 +43,7 @@ WORKDIR /root
 
 RUN mkdir -p /var/log/supervisor && \
     mkdir -p /var/run/sshd && \
+    mkdir -p /etc/collectd && \
     sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
     echo 'root:root' | chpasswd && \
     rm -rf .ssh && \
@@ -72,6 +73,9 @@ COPY influxdb/init.sh /etc/init.d/influxdb
 
 # Configure Grafana
 COPY grafana/grafana.ini /etc/grafana/grafana.ini
+
+# Configure Collectd
+COPY collectd/types.db /etc/collectd/types.db
 
 RUN chmod 0755 /etc/init.d/influxdb
 
